@@ -11,13 +11,24 @@
         $stations = CSVTable::open("resources/station.csv");
         if($stations === null) { return null; }
 
+        $lines = CSVTable::open("resources/line.csv");
+        if($lines === null) { return null; }
+
         foreach($stations as $record)
         {
             // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
             $pref_code = $record["pref_cd"];
             if($pref_code !== $TOKYO_PREF_CODE) { continue; }
 
-            $data = array("name" => $record["station_name"]);
+            // 駅名
+            $name = $record["station_name"];
+            // 路線名
+            $line_name = $lines->get_with_column_value("line_cd", $record["line_cd"])["line_name"];
+
+            $data = array(
+                "name" => $name,
+                "line_name" => $line_name
+            );
             array_push($datas, $data);
         }
 

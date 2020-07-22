@@ -25,6 +25,22 @@
             return $csv_table;
         }
 
+        // 指定されたカラムの値が一致するデータを返す。
+        public function get_with_column_value($column, $value, $as_array = false)
+        {
+            $result = [];
+            foreach($this as $record)
+            {
+                if(isset($record[$column]) && $record[$column] === $value)
+                {
+                    if(!$as_array) { return $record; }
+                    array_push($result, $record);
+                }
+            }
+
+            return $result;
+        }
+
         // ダンプ
         public function dump()
         {
