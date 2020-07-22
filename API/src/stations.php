@@ -22,14 +22,16 @@
 
             // 駅名
             $name = $record["station_name"];
-            // 路線名
-            $line_name = $lines->get_with_column_value("line_cd", $record["line_cd"])["line_name"];
+            // 路線コード・路線名
+            $line_code = $record["line_cd"];
+            $line_name = $lines->get_with_column_value("line_cd", $line_code)["line_name"];
             // 経度・緯度
             $lon = $record["lon"];
             $lat = $record["lat"];
 
             $data = array(
                 "name" => $name,
+                "line_code" => $line_code,
                 "line_name" => $line_name,
                 "lon" => $lon,
                 "lat" => $lat,
