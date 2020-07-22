@@ -6,28 +6,27 @@ window.onload = function() {
         return;
     }
 
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function()
-    {
-        if(request.readyState == 4)
-        {
-            if(request.status == 200)
-            {
-                drawInfo(context, "通信成功");
-            }
-            else
-            {
-                drawInfo(context, "通信エラー");
-            }
-        }
-        else
-        {
-            drawInfo(context, "通信中・・・");
-        }
-    }
+    drawInfo(context, "通信中・・・");
 
-    request.open("GET", "http://localhost:3000/tokyo-metro-network/api/stations.php");
-    request.send(null);
+    // ↓同じホストでＡＰＩサーバが動いている前提の処理。
+    //  （docker-compose使ってるならまぁ大丈夫だけど。）
+    var host = location.hostname;
+    var port = 3000;
+    var url = "http://" + host + ":" + port + "/";
+    url += "tokyo-metro-network/api/stations.php";
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "json",
+        timespan: 5000,
+    }).done(function()
+    {
+        drawInfo(context, "通信成功");   
+    }).fail(function()
+    {
+        drawInfo(context, "通信エラー"); 
+    });
 }
 
 // テキスト描画
