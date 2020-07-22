@@ -7,5 +7,5 @@ services:
         ports:
             - 3000:80
         volumes:
-            - ./API/src:/var/www/html
+            - ./API/src:/var/www/html/tokyo-metro-network/api
         
