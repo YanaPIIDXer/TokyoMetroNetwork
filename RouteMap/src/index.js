@@ -6,11 +6,40 @@ window.onload = function() {
         return;
     }
 
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function()
+    {
+        if(request.readyState == 4)
+        {
+            if(request.status == 200)
+            {
+                drawInfo(context, "通信成功");
+            }
+            else
+            {
+                drawInfo(context, "通信エラー");
+            }
+        }
+        else
+        {
+            drawInfo(context, "通信中・・・");
+        }
+    }
+
+    request.open("GET", "http://localhost:3000/tokyo-metro-network/api/statins.php");
+    request.send(null);
+}
+
+// テキスト描画
+function drawInfo(context, infoText)
+{
+    context.clearRect(0, 0, 1280, 700);
+    
     drawBackground(context);
 
     context.font = "64px serif";
     setColor(context, 0, 0, 0, 255);
-    context.fillText("読み込み中・・・", 450, 350);
+    context.fillText(infoText, 450, 350);
 }
 
 // 背景色描画
