@@ -14,9 +14,15 @@
         $lines = CSVTable::open("resources/line.csv");
         if($lines === null) { return null; }
 
+        // HACK:$datasが一時領域扱いになっている。
+        //      後程関数を分割して対処。
+
+        // 東京都の駅を列挙。
         foreach($stations as $record)
         {
             // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
+            // ※当然、都外の駅は弾かれる。（ex:東京メトロ各線 和光市）
+            // TODO:都内の駅からの接続がある駅も含められるように考慮する。
             $pref_code = $record["pref_cd"];
             if($pref_code !== TOKYO_PREF_CODE) { continue; }
 
@@ -39,7 +45,28 @@
             array_push($datas, $data);
         }
 
-        return $datas;
+        // 一つの駅に複数の路線が敷かれているケースを考慮した形に修正する。
+        $result = [];
+        $count = count($datas);
+        for($i = 0; $i < $count; $i++)
+        {
+            $data = array("name" => $datas[$i]["name"]);
+            $lines = [];
+            array_push($lines, $datas[$i]["line"]);
+            for($j = $count - 1; $j >= $i; $j--)
+            {
+                if($datas[$i]["name"] !== $datas[$j]["name"]) { continue; }
+
+                array_push($lines, $datas[$j]["line"]);
+                array_splice($datas, $j, 1);
+            }
+            array_push($result, array(
+                "name" => $datas[$i]["name"],
+                "lines" => $lines,
+            ));
+        }
+
+        return $result;
     }
 
     $json = ["success" => false, "data" => null];
