@@ -2,6 +2,42 @@ const CANVAS_WIDTH = 3000;
 const CANVAS_HEIGHT = 1500;
 
 var renderer = new CanvasRenderer();
+class MainLogicEvent extends IMainLogicEvent
+{
+    #renderer = null;
+    constructor(renderer)
+    {
+        super();
+        this.#renderer = renderer;
+    }
+    
+    // 駅データが更新された。
+    onUpdateStationDatas(stations, renderRange)
+    {
+        this.#renderer.drawBackground();
+        
+        this.#renderer.setFont("8px serif");
+        this.#renderer.setColor(128, 255, 128, 255);
+        stations.map(data =>
+        {        
+            var location = data["location"];
+    
+            // 計算した範囲から0 ~ 1の範囲にクリッピング。
+            const norm = (x, y, p) => { return (p - x) / (y - x); }
+            var x = norm(renderRange.left, renderRange.right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
+            var y = norm(renderRange.top, renderRange.bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
+    
+            this.#renderer.drawText(data["name"], x, y);
+        });
+    }
+
+    // 通信エラーが発生した。
+    onError()
+    {
+        drawInfo("通信エラー");
+    }
+}
+var logic = new MainLogic(new MainLogicEvent(renderer));
 
 window.onload = function() {
     if(!renderer.init("drawCanvas", CANVAS_WIDTH, CANVAS_HEIGHT))
@@ -12,23 +48,7 @@ window.onload = function() {
     
     drawInfo("通信中・・・");
 
-    // ↓同じホストでＡＰＩサーバが動いている前提の処理。
-    //  （docker-compose使ってるならまぁ大丈夫だけど。）
-    var host = location.hostname;
-    var port = 3000;
-    var url = "http://" + host + ":" + port + "/";
-    url += "tokyo-metro-network/api/stations.php";
-
-    $.ajax({
-        url: url,
-        type: "GET",
-        dataType: "json",
-        timespan: 5000,
-    }).done(onResponseStations)
-    .fail(function(jqxHR, textStatus, errorThrown)
-    {
-        drawInfo(context, "通信エラー"); 
-    });
+    logic.fetchStationDatas();
 }
 
 // インフォメーションテキスト描画
@@ -39,55 +59,4 @@ function drawInfo(infoText)
     renderer.setFont("64px serif");
     renderer.setColor(0, 0, 0, 255);
     renderer.drawText(infoText, 450, 350);
-}
-
-// stations.phpからのレスポンスを受信。
-function onResponseStations(result)
-{
-    var datas = JSON.parse(JSON.stringify(result));
-
-    renderer.drawBackground();
-
-    // 範囲計算
-    var left = 65535.0;
-    var top = 65535.0;
-    var right = 0;
-    var bottom = 0;
-    datas["data"].map(data =>
-    {
-        var location = data["location"];
-        var x = location["lat"];
-        var y = location["lon"];
-        if(left > x)
-        {
-            left = x;
-        }
-        if(right < x)
-        {
-            right = x;
-        }
-        if(top > y)
-        {
-            top = y;
-        }
-        if(bottom < y)
-        {
-            bottom = y;
-        }
-    });
-    
-    // 描画
-    renderer.setFont("8px serif");
-    renderer.setColor(128, 255, 128, 255);
-    datas["data"].map(data =>
-    {        
-        var location = data["location"];
-
-        // 計算した範囲から0 ~ 1の範囲にクリッピング。
-        const norm = (x, y, p) => { return (p - x) / (y - x); }
-        var x = norm(left, right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
-        var y = norm(top, bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
-
-        renderer.drawText(data["name"], x, y);
-    });
 }
