@@ -7,14 +7,25 @@ window.onload = function() {
     }
 
     drawBackground(context);
+
+    setColor(context, 0, 0, 0, 255);
+    context.fillText("読み込み中・・・", 110, 80);
 }
 
 // 背景色描画
 function drawBackground(context)
 {
-    context.fillStyle = 'rgb(0, 0, 255)';
-    context.globalAlpha = 0.5;
+    setColor(context, 0, 0, 255, 128);
     context.fillRect(0, 0, 1280, 700);
+}
+
+// 描画色を設定。
+// ※各要素0～255の範囲。
+function setColor(context, R, G, B, A = 255)
+{
+    var fillStyle = "rgb(" + R + ", " + G + ", " + B + ")";
+    context.fillStyle = fillStyle;
+    context.globalAlpha = A / 255.0;
 }
 
 // CanvasからContextを取得。
