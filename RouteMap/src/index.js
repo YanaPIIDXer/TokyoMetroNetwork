@@ -2,8 +2,9 @@ const CANVAS_WIDTH = 3000;
 const CANVAS_HEIGHT = 1500;
 
 var renderer = new CanvasRenderer();
-class MainLogicEvent extends IMainLogicEvent
+var logic = new MainLogic(new class extends IMainLogicEvent
 {
+
     // 駅データが更新された。
     onUpdateStationDatas(stations, renderRange)
     {
@@ -14,12 +15,12 @@ class MainLogicEvent extends IMainLogicEvent
         stations.map(data =>
         {        
             var location = data["location"];
-    
+
             // 計算した範囲から0 ~ 1の範囲にクリッピング。
             const norm = (x, y, p) => { return (p - x) / (y - x); }
             var x = norm(renderRange.left, renderRange.right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
             var y = norm(renderRange.top, renderRange.bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
-    
+
             renderer.drawText(data["name"], x, y);
         });
     }
@@ -28,9 +29,8 @@ class MainLogicEvent extends IMainLogicEvent
     onError()
     {
         drawInfo("通信エラー");
-    }
-}
-var logic = new MainLogic(new MainLogicEvent());
+    }   
+});
 
 window.onload = function() {
     if(!renderer.init("drawCanvas", CANVAS_WIDTH, CANVAS_HEIGHT))
