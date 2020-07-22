@@ -10,7 +10,7 @@ window.onload = function() {
         return;
     }
     
-    renderer.drawInfo("通信中・・・");
+    drawInfo("通信中・・・");
 
     // ↓同じホストでＡＰＩサーバが動いている前提の処理。
     //  （docker-compose使ってるならまぁ大丈夫だけど。）
@@ -27,8 +27,18 @@ window.onload = function() {
     }).done(onResponseStations)
     .fail(function(jqxHR, textStatus, errorThrown)
     {
-        renderer.drawInfo(context, "通信エラー"); 
+        drawInfo(context, "通信エラー"); 
     });
+}
+
+// インフォメーションテキスト描画
+function drawInfo(infoText)
+{   
+    renderer.drawBackground();
+
+    renderer.setFont("64px serif");
+    renderer.setColor(0, 0, 0, 255);
+    renderer.drawText(infoText, 450, 350);
 }
 
 // stations.phpからのレスポンスを受信。

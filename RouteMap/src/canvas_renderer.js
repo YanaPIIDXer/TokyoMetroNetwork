@@ -25,16 +25,6 @@ class CanvasRenderer
         return true;
     }
     
-    // インフォメーションテキスト描画
-    drawInfo(infoText)
-    {   
-        this.drawBackground();
-
-        this.setFont("64px serif");
-        this.setColor(0, 0, 0, 255);
-        this.drawText(infoText, 450, 350);
-    }
-
     // テキスト描画
     drawText(text, x, y)
     {
