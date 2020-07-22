@@ -26,7 +26,7 @@ window.onload = function() {
         }
     }
 
-    request.open("GET", "http://localhost:3000/tokyo-metro-network/api/statins.php");
+    request.open("GET", "http://localhost:3000/tokyo-metro-network/api/stations.php");
     request.send(null);
 }
 
