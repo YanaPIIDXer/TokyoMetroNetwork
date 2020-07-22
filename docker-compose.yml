@@ -1,0 +1,11 @@
+version: '3'
+services: 
+    api:
+        build: ./API
+        tty: true
+        container_name: TMN_API
+        ports:
+            - 3000:80
+        volumes:
+            - ./API/src:/var/www/html
+        
