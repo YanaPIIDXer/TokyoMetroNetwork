@@ -25,16 +25,16 @@
             // 路線コード・路線名
             $line_code = $record["line_cd"];
             $line_name = $lines->get_with_column_value("line_cd", $line_code)["line_name"];
+            $line = array("code" => $line_code, "name" => $line_name);
             // 経度・緯度
             $lon = $record["lon"];
             $lat = $record["lat"];
+            $location = array("lon" => $lon, "lat" => $lat);
 
             $data = array(
                 "name" => $name,
-                "line_code" => $line_code,
-                "line_name" => $line_name,
-                "lon" => $lon,
-                "lat" => $lat,
+                "line" => $line,
+                "location" => $location,
             );
             array_push($datas, $data);
         }
