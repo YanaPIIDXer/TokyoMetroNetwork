@@ -4,20 +4,13 @@ const CANVAS_HEIGHT = 1500;
 var renderer = new CanvasRenderer();
 class MainLogicEvent extends IMainLogicEvent
 {
-    #renderer = null;
-    constructor(renderer)
-    {
-        super();
-        this.#renderer = renderer;
-    }
-    
     // 駅データが更新された。
     onUpdateStationDatas(stations, renderRange)
     {
-        this.#renderer.drawBackground();
+        renderer.drawBackground();
         
-        this.#renderer.setFont("8px serif");
-        this.#renderer.setColor(128, 255, 128, 255);
+        renderer.setFont("8px serif");
+        renderer.setColor(128, 255, 128, 255);
         stations.map(data =>
         {        
             var location = data["location"];
@@ -27,7 +20,7 @@ class MainLogicEvent extends IMainLogicEvent
             var x = norm(renderRange.left, renderRange.right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
             var y = norm(renderRange.top, renderRange.bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
     
-            this.#renderer.drawText(data["name"], x, y);
+            renderer.drawText(data["name"], x, y);
         });
     }
 
@@ -37,7 +30,7 @@ class MainLogicEvent extends IMainLogicEvent
         drawInfo("通信エラー");
     }
 }
-var logic = new MainLogic(new MainLogicEvent(renderer));
+var logic = new MainLogic(new MainLogicEvent());
 
 window.onload = function() {
     if(!renderer.init("drawCanvas", CANVAS_WIDTH, CANVAS_HEIGHT))
