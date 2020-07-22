@@ -4,7 +4,6 @@ const CANVAS_HEIGHT = 1500;
 var renderer = new CanvasRenderer();
 var logic = new MainLogic(new class extends IMainLogicEvent
 {
-
     // 駅データが更新された。
     onUpdateStationDatas(stations, renderRange)
     {
@@ -13,7 +12,7 @@ var logic = new MainLogic(new class extends IMainLogicEvent
         renderer.setFont("8px serif");
         renderer.setColor(128, 255, 128, 255);
         stations.map(data =>
-        {        
+        {
             var location = data["location"];
 
             // 計算した範囲から0 ~ 1の範囲にクリッピング。

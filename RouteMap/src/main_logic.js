@@ -10,13 +10,6 @@ class IMainLogicEvent {
 class MainLogic {
     #stationDatas = null;
     #logicEvent = null;
-    #range = new class
-    {
-        left = 65535.0;
-        top = 65535.0;
-        right = 0;
-        bottom = 0;
-    }
     
     // コンストラクタ
     constructor(logicEvent)
@@ -63,34 +56,44 @@ class MainLogic {
         var datas = JSON.parse(JSON.stringify(result));
         this.#stationDatas = datas["data"];
 
-        this.recalcRange();
-        this.#logicEvent.onUpdateStationDatas(this.#stationDatas, this.#range);
+        var range = this.calcRange();
+        this.#logicEvent.onUpdateStationDatas(this.#stationDatas, range);
     }
 
-    // 範囲の再計算
-    recalcRange()
+    // 範囲の計算
+    calcRange()
     {
+        var range = new class
+        {
+            left = 65535.0;
+            top = 65535.0;
+            right = 0;
+            bottom = 0;
+        };
+        
         this.#stationDatas.map(data =>
         {
             var location = data["location"];
             var x = location["lat"];
             var y = location["lon"];
-            if(this.#range.left > x)
+            if(range.left > x)
             {
-                this.#range.left = x;
+                range.left = x;
             }
-            if(this.#range.right < x)
+            if(range.right < x)
             {
-                this.#range.right = x;
+                range.right = x;
             }
-            if(this.#range.top > y)
+            if(range.top > y)
             {
-                this.#range.top = y;
+                range.top = y;
             }
-            if(this.#range.bottom < y)
+            if(range.bottom < y)
             {
-                this.#range.bottom = y;
+                range.bottom = y;
             }
         });
+
+        return range;
     }
 }
