@@ -41,12 +41,11 @@
     function collect_stations($stations)
     {
         $result = [];
-        $count = count($stations);
-        for($i = 0; $i < $count; $i++)
+        for($i = 0; $i < count($stations); $i++)
         {
             $lines = [];
             array_push($lines, $stations[$i]["line"]);
-            for($j = $count - 1; $j > $i; $j--)
+            for($j = count($stations) - 1; $j > $i; $j--)
             {
                 if($stations[$i]["name"] !== $stations[$j]["name"]) { continue; }
                 
