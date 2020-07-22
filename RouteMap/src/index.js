@@ -1,15 +1,16 @@
 const CANVAS_WIDTH = 3000;
 const CANVAS_HEIGHT = 1500;
 
+var renderer = new CanvasRenderer();
+
 window.onload = function() {
-    var context = getContextFromCanvas();
-    if(context == null)
+    if(!renderer.init("drawCanvas", CANVAS_WIDTH, CANVAS_HEIGHT))
     {
-        alert("Contextが取得できませんでした。");
+        alert("CanvasRendererの初期化に失敗しました。");
         return;
     }
-
-    drawInfo(context, "通信中・・・");
+    
+    renderer.drawInfo("通信中・・・");
 
     // ↓同じホストでＡＰＩサーバが動いている前提の処理。
     //  （docker-compose使ってるならまぁ大丈夫だけど。）
@@ -23,21 +24,19 @@ window.onload = function() {
         type: "GET",
         dataType: "json",
         timespan: 5000,
-    }).done(function(result)
+    }).done(onResponseStations)
+    .fail(function(jqxHR, textStatus, errorThrown)
     {
-        onResponseStations(context, result);
-    }).fail(function(jqxHR, textStatus, errorThrown)
-    {
-        drawInfo(context, "通信エラー"); 
+        renderer.drawInfo(context, "通信エラー"); 
     });
 }
 
 // stations.phpからのレスポンスを受信。
-function onResponseStations(context, result)
+function onResponseStations(result)
 {
     var datas = JSON.parse(JSON.stringify(result));
 
-    drawBackground(context);
+    renderer.drawBackground();
 
     // 範囲計算
     var left = 65535.0;
@@ -68,8 +67,8 @@ function onResponseStations(context, result)
     });
     
     // 描画
-    context.font = "8px serif";
-    setColor(context, 128, 255, 128, 255);
+    renderer.setFont("8px serif");
+    renderer.setColor(128, 255, 128, 255);
     datas["data"].map(data =>
     {        
         var location = data["location"];
@@ -79,49 +78,6 @@ function onResponseStations(context, result)
         var x = norm(left, right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
         var y = norm(top, bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
 
-        context.fillText(data["name"], x, y);
+        renderer.drawText(data["name"], x, y);
     });
-}
-
-// テキスト描画
-function drawInfo(context, infoText)
-{   
-    drawBackground(context);
-
-    context.font = "64px serif";
-    setColor(context, 0, 0, 0, 255);
-    context.fillText(infoText, 450, 350);
-}
-
-// 背景色描画
-function drawBackground(context)
-{
-    context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    setColor(context, 0, 0, 255, 128);
-    context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-}
-
-// 描画色を設定。
-// ※各要素0～255の範囲。
-function setColor(context, R, G, B, A = 255)
-{
-    var fillStyle = "rgb(" + R + ", " + G + ", " + B + ")";
-    context.fillStyle = fillStyle;
-    context.globalAlpha = A / 255.0;
-}
-
-// CanvasからContextを取得。
-function getContextFromCanvas()
-{
-    var canvas = document.getElementById("drawCanvas");
-    if(canvas == null) { return null; }
-
-    // HACK:これここでやる事じゃなくね？
-    canvas.width = CANVAS_WIDTH;
-    canvas.height = CANVAS_HEIGHT;
-
-    if(canvas.getContext == undefined) { return null; }
-
-    return canvas.getContext("2d");
 }
