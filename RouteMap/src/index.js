@@ -32,15 +32,57 @@ window.onload = function() {
 // stations.phpからのレスポンスを受信。
 function onResponseStations(context, result)
 {
-    var data = JSON.parse(JSON.stringify(result));
-    drawInfo(context,　data["data"][0]["name"]);
+    var datas = JSON.parse(JSON.stringify(result));
+
+    drawBackground(context);
+
+    // 範囲計算
+    var left = 65535.0;
+    var top = 65535.0;
+    var right = 0;
+    var bottom = 0;
+    datas["data"].map(data =>
+    {
+        var location = data["location"];
+        var x = location["lat"];
+        var y = location["lon"];
+        if(left > x)
+        {
+            left = x;
+        }
+        if(right < x)
+        {
+            right = x;
+        }
+        if(top > y)
+        {
+            top = y;
+        }
+        if(bottom < y)
+        {
+            bottom = y;
+        }
+    });
+    
+    // 描画
+    context.font = "8px serif";
+    setColor(context, 128, 255, 128, 255);
+    datas["data"].map(data =>
+    {        
+        var location = data["location"];
+
+        // 計算した範囲から0 ~ 1の範囲にクリッピング。
+        const norm = (x, y, p) => { return (p - x) / (y - x); }
+        var x = norm(left, right, location["lat"]) * 1180 + 50;
+        var y = norm(top, bottom, location["lon"]) * 600 + 50;
+
+        context.fillText(data["name"], x, y);
+    });
 }
 
 // テキスト描画
 function drawInfo(context, infoText)
-{
-    context.clearRect(0, 0, 1280, 700);
-    
+{   
     drawBackground(context);
 
     context.font = "64px serif";
@@ -51,6 +93,8 @@ function drawInfo(context, infoText)
 // 背景色描画
 function drawBackground(context)
 {
+    context.clearRect(0, 0, 1280, 700);
+
     setColor(context, 0, 0, 255, 128);
     context.fillRect(0, 0, 1280, 700);
 }
