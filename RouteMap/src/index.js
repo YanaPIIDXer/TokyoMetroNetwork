@@ -31,7 +31,8 @@ var logic = new MainLogic(new class extends IMainLogicEvent
     }   
 });
 
-window.onload = function() {
+window.onload = function()
+{
     if(!renderer.init("drawCanvas", CANVAS_WIDTH, CANVAS_HEIGHT))
     {
         alert("CanvasRendererの初期化に失敗しました。");

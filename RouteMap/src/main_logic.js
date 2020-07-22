@@ -7,8 +7,8 @@ class IMainLogicEvent {
 }
 
 // メインロジッククラス
-class MainLogic {
-    #stationDatas = null;
+class MainLogic
+{
     #logicEvent = null;
     
     // コンストラクタ
@@ -54,14 +54,14 @@ class MainLogic {
     onFetchStationDatas(result)
     {
         var datas = JSON.parse(JSON.stringify(result));
-        this.#stationDatas = datas["data"];
+        var stationDatas = datas["data"];
 
-        var range = this.calcRange();
-        this.#logicEvent.onUpdateStationDatas(this.#stationDatas, range);
+        var range = this.calcRange(stationDatas);
+        this.#logicEvent.onUpdateStationDatas(stationDatas, range);
     }
 
     // 範囲の計算
-    calcRange()
+    calcRange(stationDatas)
     {
         var range = new class
         {
@@ -71,7 +71,7 @@ class MainLogic {
             bottom = 0;
         };
         
-        this.#stationDatas.map(data =>
+        stationDatas.map(data =>
         {
             var location = data["location"];
             var x = location["lat"];
