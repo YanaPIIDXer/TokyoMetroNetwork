@@ -1,5 +1,8 @@
 <?php
     require_once "classes/CSVTable.php";
+    
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 
     const TOKYO_PREF_CODE = 13;     // 東京都の都道府県コード
 
