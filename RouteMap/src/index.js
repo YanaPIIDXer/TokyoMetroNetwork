@@ -20,10 +20,11 @@ window.onload = function() {
         type: "GET",
         dataType: "json",
         timespan: 5000,
-    }).done(function()
+    }).done(function(result, textStatus, jqxHR)
     {
-        drawInfo(context, "通信成功");   
-    }).fail(function()
+        var data = JSON.parse(JSON.stringify(result));
+        drawInfo(context,　data["data"][0]["name"]);
+    }).fail(function(jqxHR, textStatus, errorThrown)
     {
         drawInfo(context, "通信エラー"); 
     });
