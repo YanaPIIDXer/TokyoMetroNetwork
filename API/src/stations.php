@@ -1,7 +1,7 @@
 <?php
     require_once "classes/CSVTable.php";
 
-    const TOKYO_PREF_CODE = "13";     // 東京都の都道府県コード
+    const TOKYO_PREF_CODE = 13;     // 東京都の都道府県コード
 
     // 駅を列挙
     function enumrate_stations($stations_csv, $lines_csv)
@@ -12,7 +12,7 @@
             // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
             // ※当然、都外の駅は弾かれる。（ex:東京メトロ各線 和光市）
             // TODO:都内の駅からの接続がある駅も含められるように考慮する。
-            $pref_code = $record["pref_cd"];
+            $pref_code = intval($record["pref_cd"]);
             if($pref_code !== TOKYO_PREF_CODE) { continue; }
 
             // 駅名
@@ -20,11 +20,11 @@
             // 路線コード・路線名
             $line_code = $record["line_cd"];
             $line_name = $lines_csv->get_with_column_value("line_cd", $line_code)["line_name"];
-            $line = array("code" => $line_code, "name" => $line_name);
+            $line = array("code" => intval($line_code), "name" => $line_name);
             // 経度・緯度
             $lon = $record["lon"];
             $lat = $record["lat"];
-            $location = array("lon" => $lon, "lat" => $lat);
+            $location = array("lon" => floatval($lon), "lat" => floatval($lat));
 
             $data = array(
                 "name" => $name,
