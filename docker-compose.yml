@@ -9,3 +9,12 @@ services:
         volumes:
             - ./API/src:/var/www/html/tokyo-metro-network/api
         
+    route-map:
+        build: ./RouteMap
+        tty: true
+        container_name: TMN_RouteMap
+        ports:
+            - 3001:80
+        volumes:
+            - ./RouteMap/src:/var/www/html/tokyo-metro-network
+            
