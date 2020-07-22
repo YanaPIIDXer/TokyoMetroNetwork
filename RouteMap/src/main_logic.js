@@ -1,5 +1,6 @@
 // メインロジックのイベント実装用インタフェース
-class IMainLogicEvent {
+class IMainLogicEvent
+{
     // 駅データが更新された。
     onUpdateStationDatas(stations, renderRange) {}
     // 通信エラーが発生した。
@@ -30,10 +31,19 @@ class MainLogic
     }
 
     // 駅データ取得
-    fetchStationDatas(onFail)
+    fetchStationDatas()
     {
-        var url = MainLogic.buildAPIURI("stations");
-        var self = this;
+        this.fetchFromAPI("stations", function(self, result)
+        {
+            self.onFetchStationDatas(result);
+        });
+    }
+
+    // APIを使って情報を取得
+    fetchFromAPI(apiName, onSuccess)
+    {
+        var url = MainLogic.buildAPIURI(apiName);
+        var self = this;        // クロージャ内ではthisがundefinedになるための処置。
 
         $.ajax({
             url: url,
@@ -42,7 +52,7 @@ class MainLogic
             timespan: 5000,
         }).done(function(result)
         {
-            self.onFetchStationDatas(result);
+            onSuccess(self, result);
         })
         .fail(function(jqxHR, textStatus, errorThrown)
         {
