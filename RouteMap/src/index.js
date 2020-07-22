@@ -1,3 +1,6 @@
+const CANVAS_WIDTH = 3000;
+const CANVAS_HEIGHT = 1500;
+
 window.onload = function() {
     var context = getContextFromCanvas();
     if(context == null)
@@ -73,8 +76,8 @@ function onResponseStations(context, result)
 
         // 計算した範囲から0 ~ 1の範囲にクリッピング。
         const norm = (x, y, p) => { return (p - x) / (y - x); }
-        var x = norm(left, right, location["lat"]) * 1180 + 50;
-        var y = norm(top, bottom, location["lon"]) * 600 + 50;
+        var x = norm(left, right, location["lat"]) * (CANVAS_WIDTH - 100) + 50;
+        var y = norm(top, bottom, location["lon"]) * (CANVAS_HEIGHT - 100) + 50;
 
         context.fillText(data["name"], x, y);
     });
@@ -93,10 +96,10 @@ function drawInfo(context, infoText)
 // 背景色描画
 function drawBackground(context)
 {
-    context.clearRect(0, 0, 1280, 700);
+    context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     setColor(context, 0, 0, 255, 128);
-    context.fillRect(0, 0, 1280, 700);
+    context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 // 描画色を設定。
@@ -115,8 +118,8 @@ function getContextFromCanvas()
     if(canvas == null) { return null; }
 
     // HACK:これここでやる事じゃなくね？
-    canvas.width = 1280;
-    canvas.height = 700;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
 
     if(canvas.getContext == undefined) { return null; }
 
