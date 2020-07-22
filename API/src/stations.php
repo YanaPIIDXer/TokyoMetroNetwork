@@ -1,15 +1,34 @@
 <?php
-    $fp = fopen("resources/station.csv", "r");
-    $data = [];
-    fgetcsv($fp);
-    while($row = fgetcsv($fp))
-    {
-        // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
-        $pref_code = $row['6'];
-        if($pref_code !== "13") { continue; }
+    require_once "classes/CSVTable.php";
 
-        $station_name = $row['2'];
-        array_push($data, $station_name);
+    // データ作成
+    function make_data()
+    {
+        $data = [];
+            
+        $stations = CSVTable::open("resources/station.csv");
+        if($stations === null) { return null; }
+
+        foreach($stations as $record)
+        {
+            // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
+            $pref_code = $record["pref_cd"];
+            if($pref_code !== "13") { continue; }
+
+            $station_name = $record["station_name"];
+            array_push($data, $station_name);
+        }
+
+        return $data;
     }
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+    $json = ["success" => false, "data" => null];
+    $data = make_data();
+    if($data !== null)
+    {
+        $json["success"] = true;
+        $json["data"] = $data;
+    }
+
+    echo json_encode($json, JSON_UNESCAPED_UNICODE);
 ?>
