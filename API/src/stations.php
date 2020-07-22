@@ -1,7 +1,7 @@
 <?php
     require_once "classes/CSVTable.php";
 
-    const TOKYO_PREF_CODE = "13";     // 東京の都道府県コード
+    const TOKYO_PREF_CODE = "13";     // 東京都の都道府県コード
 
     // データ作成
     function make_data()
