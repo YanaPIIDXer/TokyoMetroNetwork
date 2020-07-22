@@ -8,8 +8,9 @@ window.onload = function() {
 
     drawBackground(context);
 
+    context.font = "64px serif";
     setColor(context, 0, 0, 0, 255);
-    context.fillText("読み込み中・・・", 110, 80);
+    context.fillText("読み込み中・・・", 450, 350);
 }
 
 // 背景色描画
@@ -33,6 +34,10 @@ function getContextFromCanvas()
 {
     var canvas = document.getElementById("drawCanvas");
     if(canvas == null) { return null; }
+
+    // HACK:これここでやる事じゃなくね？
+    canvas.width = 1280;
+    canvas.height = 700;
 
     if(canvas.getContext == undefined) { return null; }
 
