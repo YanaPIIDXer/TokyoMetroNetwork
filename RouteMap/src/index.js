@@ -20,14 +20,20 @@ window.onload = function() {
         type: "GET",
         dataType: "json",
         timespan: 5000,
-    }).done(function(result, textStatus, jqxHR)
+    }).done(function(result)
     {
-        var data = JSON.parse(JSON.stringify(result));
-        drawInfo(context,　data["data"][0]["name"]);
+        onResponseStations(context, result);
     }).fail(function(jqxHR, textStatus, errorThrown)
     {
         drawInfo(context, "通信エラー"); 
     });
+}
+
+// stations.phpからのレスポンスを受信。
+function onResponseStations(context, result)
+{
+    var data = JSON.parse(JSON.stringify(result));
+    drawInfo(context,　data["data"][0]["name"]);
 }
 
 // テキスト描画
