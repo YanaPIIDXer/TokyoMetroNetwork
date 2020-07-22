@@ -56,6 +56,7 @@
             array_push($result, array(
                 "name" => $stations[$i]["name"],
                 "lines" => $lines,
+                "location" => $stations[$i]["location"],
             ));
         }
 
