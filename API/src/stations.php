@@ -1,11 +1,11 @@
 <?php
     require_once "classes/CSVTable.php";
 
+    const TOKYO_PREF_CODE = "13";     // 東京の都道府県コード
+
     // データ作成
     function make_data()
     {
-        static $TOKYO_PREF_CODE = "13";     // 東京の都道府県コード
-    
         $datas = [];
         
         $stations = CSVTable::open("resources/station.csv");
@@ -18,7 +18,7 @@
         {
             // 都道府県コードをチェックし、東京都以外なら読み飛ばす。
             $pref_code = $record["pref_cd"];
-            if($pref_code !== $TOKYO_PREF_CODE) { continue; }
+            if($pref_code !== TOKYO_PREF_CODE) { continue; }
 
             // 駅名
             $name = $record["station_name"];
