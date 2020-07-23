@@ -1,8 +1,11 @@
 # ========= TASK ============
 
+variable "api_image_uri" {}
+variable "route_map_image_uri" {}
+
 # API
 resource "aws_ecs_task_definition" "tmn_ecs_task_api" {
-    family = "tmn_ecs_task"
+    family = "tmn_ecs_task_api"
     requires_compatibilities = ["EC2"]
     cpu    = "256"
     memory = "256"
@@ -13,7 +16,7 @@ resource "aws_ecs_task_definition" "tmn_ecs_task_api" {
     [
         {
             "name": "api",
-            "image": "yanap/tokyo_metro_network_api",
+            "image": "${var.api_image_uri}",
             "portMappings": [
                 {
                     "containerPort": 80,
@@ -27,7 +30,7 @@ resource "aws_ecs_task_definition" "tmn_ecs_task_api" {
 
 # API
 resource "aws_ecs_task_definition" "tmn_ecs_task_route_map" {
-    family = "tmn_ecs_task"
+    family = "tmn_ecs_task_route_map"
     requires_compatibilities = ["EC2"]
     cpu    = "256"
     memory = "256"
@@ -38,7 +41,7 @@ resource "aws_ecs_task_definition" "tmn_ecs_task_route_map" {
     [
         {
             "name": "api",
-            "image": "yanap/tokyo_metro_network-route_map",
+            "image": "${var.route_map_image_uri}",
             "portMappings": [
                 {
                     "containerPort": 80,
@@ -49,3 +52,5 @@ resource "aws_ecs_task_definition" "tmn_ecs_task_route_map" {
     ]
     EOL
 }
+
+
