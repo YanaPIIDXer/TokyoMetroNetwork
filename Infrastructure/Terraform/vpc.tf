@@ -1,10 +1,10 @@
 # VPC
 resource "aws_vpc" "tokyo_metro_network_vpc" {
-    cidr_block = "10.1.0.0/16"
-    instance_tenancy = "default"
-    tags = {
-        Name = "tokyo_metro_netrowk_vpc"
-    }
+  cidr_block = "10.1.0.0/16"
+  instance_tenancy = "default"
+  tags = {
+    Name = "tokyo_metro_netrowk_vpc"
+  }
 }
 
 # InternetGateway
@@ -36,6 +36,36 @@ resource "aws_subnet" "public_a" {
 
 # SubnetRouteTableAssociation
 resource "aws_route_table_association" "public_a" {
-    subnet_id = aws_subnet.public_a.id
-    route_table_id = aws_route_table.public.id
+  subnet_id = aws_subnet.public_a.id
+  route_table_id = aws_route_table.public.id
+}
+
+# SecurityGroup
+resource "aws_security_group" "tmn_security_group" {
+  name = "tmn_security_group"
+  vpc_id = aws_vpc.tokyo_metro_network_vpc.id
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
+  ingress {
+    from_port = 3000
+    to_port = 3000
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
 }
