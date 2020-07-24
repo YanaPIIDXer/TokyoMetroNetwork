@@ -90,7 +90,7 @@ resource "aws_ecs_cluster" "tokyo_metro_network_ecs_cluster" {
 # ECS
 resource "aws_ecs_service" "tokyo_metro_network_ecs" {
     name = "tokyo_metro_network_ecs"
-    cluster = aws_ecs_cluster.tokyo_metro_network_ecs_cluster.id
+    cluster = aws_ecs_cluster.tokyo_metro_network_ecs_cluster.name
     launch_type = "EC2"
     desired_count = 1
     task_definition = aws_ecs_task_definition.tmn_ecs_task_api.id
