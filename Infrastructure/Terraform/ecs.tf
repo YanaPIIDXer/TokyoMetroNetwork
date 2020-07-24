@@ -69,6 +69,5 @@ resource "aws_ecs_service" "tokyo_metro_network_ecs" {
     task_definition = aws_ecs_task_definition.tmn_ecs_task_api.id
     network_configuration {
         subnets = [aws_subnet.public_a.id]
-        security_groups = [aws_security_group.tmn_security_group.id]
     }
 }
