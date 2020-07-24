@@ -60,7 +60,7 @@ resource "aws_ecs_cluster" "tokyo_metro_network_ecs_cluster" {
     name = "tmn_ecs_cluster"
 }
 
-# ECS
+# ECS Service
 resource "aws_ecs_service" "tokyo_metro_network_ecs" {
     name = "tokyo_metro_network_ecs"
     cluster = aws_ecs_cluster.tokyo_metro_network_ecs_cluster.name
