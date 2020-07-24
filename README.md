@@ -19,6 +19,9 @@ APIから取得したデータを元に、東京都の路線図を表示して�
 # インフラについて
 それぞれの実験を兼ねて、Terraformを使ってAWS上にインフラを構築する手法を取っています。  
 TerraformのソースコードはInfrastructure/Terraformディレクトリ内に置いています。  
+  
+また、ザックリとしたインフラの構成図は以下の通りとなります。  
+![インフラ構成図](https://github.com/YanaPIIDXer/TokyoMetroNetwork/blob/master/Infrastructure/AWSStructure.jpg)
 
 # 注意
 駅データ.jpのデータは無料会員登録をしないと手に入らないらしく、該当ファイルをGit上で管理するのは問題があるため、以下の形を取っています。  
