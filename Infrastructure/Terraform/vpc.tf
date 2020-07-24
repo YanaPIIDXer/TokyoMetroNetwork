@@ -45,6 +45,18 @@ resource "aws_security_group" "tokyo_metro_network_ssl_security_group" {
   name = "tokyo_metro_network_ssl_security_group"
   vpc_id = aws_vpc.tokyo_metro_network_vpc.id
   ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
+  ingress {
+    from_port = 3000
+    to_port = 3000
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/16"]
+  }
+  ingress {
     from_port = 443
     to_port = 443
     protocol = "tcp"
