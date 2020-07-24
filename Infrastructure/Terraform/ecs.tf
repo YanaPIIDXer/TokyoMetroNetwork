@@ -67,7 +67,4 @@ resource "aws_ecs_service" "tokyo_metro_network_ecs" {
     launch_type = "EC2"
     desired_count = 1
     task_definition = aws_ecs_task_definition.tmn_ecs_task_api.id
-    network_configuration {
-        subnets = [aws_subnet.public_a.id]
-    }
 }
